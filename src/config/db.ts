@@ -1,4 +1,4 @@
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose, { ConnectOptions } from 'mongoose';
 
 const connectDB = async () => {
   const mongoConnection = await mongoose.connect(process.env.MONGO_URI, {
@@ -6,7 +6,7 @@ const connectDB = async () => {
     useUnifiedTopology: true,
   } as ConnectOptions);
 
-  if (mongoConnection) console.log("MongoDB Connected");
+  if (mongoConnection) console.log('MongoDB Connected');
 };
 
 export { connectDB };

@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { RequestWithUserInfo } from "../interfaces/userInterface";
-import { issueJWT } from "../services/authService";
-import * as UserService from "../services/userService";
+import { Request, Response } from 'express';
+import { RequestWithUserInfo } from '../interfaces/user.interface';
+import { issueJWT } from '../services/auth.service';
+import * as UserService from '../services/user.service';
 
 export const signInSuccess = (req: RequestWithUserInfo, res: Response) => {
   try {
@@ -16,8 +16,8 @@ export const signInSuccess = (req: RequestWithUserInfo, res: Response) => {
 
 export const addFriend = async (req: Request, res: Response) => {
   try {
-    const { userId, friendUsername } = req.body;
-    const user = await UserService.addFriend(userId, friendUsername);
+    const { userId, friendId } = req.body;
+    const user = await UserService.addFriend(userId, friendId);
     res.status(200).json(user);
   } catch (err) {
     const error = { message: `${err}` };

@@ -1,12 +1,12 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 import {
   IFriendRequest,
   RequestStatus,
-} from "../interfaces/friendRequestInterface";
+} from '../interfaces/friend-request.interface';
 
 const friendRequestSchema = new Schema<IFriendRequest>({
-  requester: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  recipient: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  requester: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  recipient: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   status: {
     type: String,
     required: true,
@@ -19,9 +19,9 @@ const friendRequestSchema = new Schema<IFriendRequest>({
 });
 
 const FriendRequest = model<IFriendRequest>(
-  "FriendRequest",
+  'FriendRequest',
   friendRequestSchema,
-  "friend_requests"
+  'friend_requests'
 );
 
 export { FriendRequest };

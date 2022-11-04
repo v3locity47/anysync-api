@@ -1,5 +1,6 @@
-import { UserModel } from "../models/userModel";
-import { ICreateUserParams, IUser } from "../interfaces/userInterface";
+import { Types } from 'mongoose';
+import { UserModel } from '../models/user.model';
+import { ICreateUserParams, IUser } from '../interfaces/user.interface';
 
 export const findOrCreate = async (
   params: ICreateUserParams
@@ -23,12 +24,9 @@ export const findOrCreate = async (
 };
 
 export const addFriend = async (
-  userId: string,
-  friendUsername: string
+  userId: Types.ObjectId,
+  friendId: Types.ObjectId
 ): Promise<IUser> => {
-  const { _id: friendId } = await UserModel.findOne({
-    username: friendUsername,
-  }).lean();
   const updatedUser = await UserModel.findOneAndUpdate(
     { _id: userId },
     { $addToSet: { friends: friendId } },

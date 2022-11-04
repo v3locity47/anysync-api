@@ -1,8 +1,8 @@
-import fs from "fs";
-import { Types } from "mongoose";
-import jsonwebtoken from "jsonwebtoken";
+import fs from 'fs';
+import { Types } from 'mongoose';
+import jsonwebtoken from 'jsonwebtoken';
 
-const PRIVATE_KEY = fs.readFileSync("./src/config/id_rsa.priv.pem", "utf8");
+const PRIVATE_KEY = fs.readFileSync('./src/config/id_rsa.priv.pem', 'utf8');
 
 export const issueJWT = (userId: Types.ObjectId) => {
   const _id = userId;
@@ -15,11 +15,11 @@ export const issueJWT = (userId: Types.ObjectId) => {
 
   const signedToken = jsonwebtoken.sign(payload, PRIVATE_KEY, {
     expiresIn: expiresIn,
-    algorithm: "RS256",
+    algorithm: 'RS256',
   });
 
   return {
-    token: "Bearer " + signedToken,
+    token: 'Bearer ' + signedToken,
     expires: expiresIn,
   };
 };

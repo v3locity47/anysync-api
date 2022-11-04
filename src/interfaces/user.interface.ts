@@ -1,5 +1,5 @@
-import { Types } from "mongoose";
-import { Request } from "express";
+import { Types } from 'mongoose';
+import { Request } from 'express';
 
 export interface IUser {
   readonly _id?: Types.ObjectId;

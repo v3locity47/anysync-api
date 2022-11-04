@@ -1,9 +1,9 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export enum RequestStatus {
-  REQUESTED = "0",
-  ACCEPTED = "1",
-  REJECTED = "2",
+  REQUESTED = '0',
+  ACCEPTED = '1',
+  REJECTED = '2',
 }
 
 export interface IFriendRequest {

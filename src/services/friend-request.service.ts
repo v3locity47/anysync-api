@@ -1,9 +1,10 @@
-import { FriendRequest } from "../models/friendRequestModel";
+import { FriendRequest } from '../models/friend-request.model';
 import {
   IFriendRequest,
   RequestStatus,
-} from "../interfaces/friendRequestInterface";
-import { IErrorMessage } from "../interfaces/errorInterface";
+} from '../interfaces/friend-request.interface';
+import { IErrorMessage } from '../interfaces/error.interface';
+import * as UserService from './user.service';
 
 export const create = async (
   requesterId: string,
@@ -17,7 +18,7 @@ export const create = async (
     (friendReq) => friendReq.status != RequestStatus.REJECTED
   );
   if (activeRequests.length != 0) {
-    return { message: "Request Already Present" };
+    return { message: 'Request Already Present' };
   }
   const requestData = {
     requester: requesterId,
@@ -37,5 +38,11 @@ export const update = async (
     { $set: { status: status } },
     { new: true }
   ).lean();
+  if (status === RequestStatus.ACCEPTED) {
+    await UserService.addFriend(
+      updatedRequest.requester,
+      updatedRequest.recipient
+    );
+  }
   return updatedRequest;
 };

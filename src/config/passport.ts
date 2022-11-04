@@ -1,10 +1,12 @@
 import passport from "passport";
+import fs from "fs";
+import { Request } from "express";
 import {
   Strategy as GoogleStrategy,
   StrategyOptionsWithRequest,
   VerifyCallback,
 } from "passport-google-oauth2";
-import { Request } from "express";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { IGoogleProfile } from "../interfaces/userInterface";
 import * as UserService from "../services/userService";
 
@@ -40,4 +42,24 @@ const googleStrat = new GoogleStrategy(
   }
 );
 
-export { googleStrat };
+const PUBLIC_KEY = fs.readFileSync("./src/config/id_rsa.pub.pem", "utf8");
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: PUBLIC_KEY,
+  algorithms: ["RS256"],
+};
+
+const jwtStrat = new JwtStrategy(
+  jwtOptions,
+  (payload, done: VerifyCallback) => {
+    try {
+      const { sub } = payload;
+      return done(null, sub);
+    } catch (err) {
+      return done(null, false);
+    }
+  }
+);
+
+export { googleStrat, jwtStrat };

@@ -1,15 +1,15 @@
 import "dotenv/config";
-import express, { Request, Response } from "express";
-import { googleStrat } from "./config/passport";
+import express from "express";
+import { googleStrat, jwtStrat } from "./config/passport";
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
 import { connectDB } from "./config/db";
 import { createServer } from "http";
 import AuthRouter from "./routes/authRoutes";
+import UserRouter from "./routes/userRoutes";
 
 const app = express();
-passport.use(googleStrat);
 
 const sessionConfig = {
   resave: false,
@@ -18,6 +18,8 @@ const sessionConfig = {
 };
 app.use(express.json());
 app.use(session(sessionConfig));
+passport.use(googleStrat);
+passport.use(jwtStrat);
 app.use(passport.initialize());
 app.use(passport.session());
 const corsOptions = {
@@ -27,6 +29,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use("/", AuthRouter);
+app.use("/", UserRouter);
 connectDB();
 
 const httpServer = createServer(app);

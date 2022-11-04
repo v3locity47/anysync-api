@@ -11,9 +11,10 @@ const userSchema = new Schema<IUser>(
     lastName: { type: String, required: true },
     username: { type: String },
     authProvider: { type: String, required: true, enum: ["google"] },
+    friends: { type: [Schema.Types.ObjectId], ref: "User" },
   },
   schemaOptions
 );
 
-const UserModel = model<IUser>("user", userSchema);
+const UserModel = model<IUser>("User", userSchema);
 export { UserModel };

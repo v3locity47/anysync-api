@@ -21,3 +21,30 @@ export const findOrCreate = async (
 
   return newUser;
 };
+
+export const addFriend = async (
+  userId: string,
+  friendUsername: string
+): Promise<IUser> => {
+  const { _id: friendId } = await UserModel.findOne({
+    username: friendUsername,
+  }).lean();
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { $addToSet: { friends: friendId } },
+    { new: true }
+  ).lean();
+  return updatedUser;
+};
+
+export const editProfile = async (
+  userId: string,
+  username: string
+): Promise<IUser> => {
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { username: username },
+    { new: true, upsert: true }
+  );
+  return updatedUser;
+};

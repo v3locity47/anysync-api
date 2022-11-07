@@ -13,7 +13,7 @@ router.put(
 );
 router.put(
   '/add-friend',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   addFriend
 );
 

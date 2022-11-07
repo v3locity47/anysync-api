@@ -6,9 +6,18 @@ const router = express.Router();
 
 router.get(
   '/google/callback',
+  (req, res, next) => {
+    // console.log(req.headers);
+    // console.log(req.user);
+    // console.log(req.originalUrl);
+    console.log(`YES: ${req.isAuthenticated()}`);
+    console.log(req.session);
+    next();
+  },
   passport.authenticate('google', {
     failureRedirect: '/auth/google/failed',
     successRedirect: '/auth/google/success',
+    keepSessionInfo: true,
   })
 );
 
@@ -19,7 +28,14 @@ router.get('/', (req, res) => {
 
 router.get(
   '/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
+  (req, res, next) => {
+    console.log('IN');
+    // console.log(req.headers);
+    next();
+  },
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+  })
 );
 
 router.get('/google/success', signInSuccess);

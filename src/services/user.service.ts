@@ -11,10 +11,6 @@ export const findOrCreate = async (
   if (user) {
     return user;
   }
-  let username = generateUsername();
-  while (!(await UserModel.findOne({ username: username }).lean())) {
-    username = generateUsername();
-  }
   const userData: IUser = {
     username: username,
     firstName: userProfile.given_name,

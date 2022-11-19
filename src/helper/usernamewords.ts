@@ -1,4 +1,4 @@
-const Adjective = [
+export const Adjective = [
   'Tacit',
   'Elite',
   'Lazy',
@@ -1636,7 +1636,7 @@ const Adjective = [
   'Inconsequential',
   'Monstrous',
 ];
-const Animal = [
+export const Animal = [
   'Aardvark',
   'Aardwolf',
   'Abalone',
@@ -2655,7 +2655,7 @@ const Animal = [
   'Zopilote',
   'Zorilla',
 ];
-const Number = [
+export const Number = [
   '00',
   '01',
   '02',
@@ -2757,5 +2757,3 @@ const Number = [
   '98',
   '99',
 ];
-
-export { Adjective, Animal, Number };

@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { UserModel } from '../models/user.model';
 import { ICreateUserParams, IUser } from '../interfaces/user.interface';
+import { generateUsername } from './username-generator.service';
 
 export const findOrCreate = async (
   params: ICreateUserParams
@@ -10,7 +11,12 @@ export const findOrCreate = async (
   if (user) {
     return user;
   }
+  let username = generateUsername();
+  while (!(await UserModel.findOne({ username: username }).lean())) {
+    username = generateUsername();
+  }
   const userData: IUser = {
+    username: username,
     firstName: userProfile.given_name,
     lastName: userProfile.family_name,
     email: userProfile.email,

@@ -9,7 +9,7 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    username: { type: String },
+    username: { type: String, required: true },
     authProvider: { type: String, required: true, enum: ['google'] },
     friends: { type: [Schema.Types.ObjectId], ref: 'User' },
   },

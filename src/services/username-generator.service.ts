@@ -1,14 +1,12 @@
-import { Adjective, Animal, Number } from './usernamewords.js';
+import { Adjective, Animal, Number } from '../helper/usernamewords.js';
 
 Array.prototype.random = function () {
   return this[Math.floor(Math.random() * this.length)];
 };
 
-const generateUsername = () => {
+export const generateUsername = () => {
   const adj = Adjective.random();
   const animName = Animal.random();
   const num = Number.random();
-  console.log(`${adj}${animName}${num}`);
+  return `${adj}${animName}${num}`;
 };
-
-generateUsername();

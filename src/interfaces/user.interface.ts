@@ -14,6 +14,10 @@ export interface IUser {
   updateAt?: string;
 }
 
+export interface IUserWithSocket extends IUser {
+  socketId: string;
+}
+
 export interface IGoogleProfile {
   provider: string;
   sub: string;
@@ -31,8 +35,8 @@ export interface IGoogleProfile {
 
 export interface ICreateUserParams {
   uniqueKey: string;
-  value: string;
-  userProfile: IGoogleProfile;
+  value: string | Types.ObjectId;
+  userProfile?: IGoogleProfile;
 }
 
 export interface RequestWithUserInfo extends Request {

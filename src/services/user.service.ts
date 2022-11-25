@@ -79,3 +79,16 @@ export const getUserHash = async (userId: string) => {
   }
   return userHash;
 };
+
+export const checkOnlineUsers = async (userIds: Array<string>) => {
+  if (isEmpty(userIds)) {
+    return {};
+  }
+  const onlineUsers = await RedisClient.smismember('users:online', userIds);
+  const userStatusEntries = userIds.map((_, i) => [
+    userIds[i],
+    Boolean(onlineUsers[i]),
+  ]);
+  const userStatus = Object.fromEntries(userStatusEntries);
+  return userStatus;
+};

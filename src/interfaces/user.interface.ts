@@ -2,14 +2,14 @@ import { Types } from 'mongoose';
 import { Request } from 'express';
 
 export interface IUser {
-  readonly _id?: Types.ObjectId;
+  readonly _id?: string & Types.ObjectId;
   oauthId: string;
   authProvider: string;
   email: string;
   firstName: string;
   lastName: string;
   username?: string;
-  friends?: Array<Types.ObjectId> | Array<IUser>;
+  friends?: Array<string> & Array<Types.ObjectId> & Array<IUser>;
   createdAt?: string;
   updateAt?: string;
 }

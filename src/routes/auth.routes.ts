@@ -1,6 +1,9 @@
 import express from 'express';
 import passport from 'passport';
-import { signInSuccess } from '../controllers/user.controller';
+import {
+  signInSuccess,
+  checkAuthentication,
+} from '../controllers/user.controller';
 
 const router = express.Router();
 
@@ -28,16 +31,12 @@ router.get('/', (req, res) => {
 
 router.get(
   '/google',
-  (req, res, next) => {
-    console.log('IN');
-    // console.log(req.headers);
-    next();
-  },
   passport.authenticate('google', {
     scope: ['profile', 'email'],
   })
 );
 
 router.get('/google/success', signInSuccess);
+router.get('/check-auth', checkAuthentication);
 
 export default router;

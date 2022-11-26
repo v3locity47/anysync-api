@@ -1,31 +1,23 @@
 import 'dotenv/config';
 import express from 'express';
-import { googleStrat, jwtStrat } from './config/passport';
+import { googleStrat } from './config/passport';
 import cors from 'cors';
 import passport from 'passport';
 import session from 'express-session';
+import { sessionConfig } from './config/session';
 import { connectDB } from './config/db';
 import { createServer } from 'http';
-import MongoStore from 'connect-mongo';
 import Router from './routes/index';
+import { initializeSocketIO } from './events/socket-connection';
 
 const app = express();
 
-const sessionStore = MongoStore.create({ mongoUrl: process.env.MONGO_URI });
-// app.set('trust proxy', 1);
-const sessionConfig = {
-  resave: false,
-  saveUninitialized: true,
-  secret: 'SECRET',
-  store: sessionStore,
-  // cookie: { secure: false, sameSite: false },
-};
 app.use(express.json());
 app.use(session(sessionConfig));
 app.use((req, res, next) => {
-  console.log(req.query);
+  // console.log(req.query);
   const { redirect_uri: redirectUrl } = req.query;
-  console.log(`REDIRECT ${redirectUrl}`);
+  // console.log(`REDIRECT ${redirectUrl}`);
 
   if (req.session && redirectUrl) {
     req.session.redirectUrl = String(redirectUrl);
@@ -36,10 +28,9 @@ app.use((req, res, next) => {
     }
     return next();
   });
-  console.log(req.session);
+  // console.log(req.session);
 });
 passport.use(googleStrat);
-// passport.use(jwtStrat);
 app.use(passport.initialize());
 app.use(passport.session());
 const corsOptions = {
@@ -52,6 +43,9 @@ app.use('/', Router);
 connectDB();
 
 const httpServer = createServer(app);
+
+initializeSocketIO(httpServer);
+
 httpServer.listen(process.env.PORT, () => {
   console.log(`Server Running on Port: ${process.env.PORT}`);
 });

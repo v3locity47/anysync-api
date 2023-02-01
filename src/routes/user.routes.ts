@@ -1,6 +1,11 @@
 import express from 'express';
 import passport from 'passport';
-import { editProfile, addFriend } from '../controllers/user.controller';
+import {
+  editProfile,
+  addFriend,
+  getLoggedInUser,
+} from '../controllers/user.controller';
+import { checkAuthentication } from '../middlewares/authentication.middleware';
 
 const router = express.Router();
 
@@ -11,10 +16,7 @@ router.put(
   }),
   editProfile
 );
-router.put(
-  '/add-friend',
-  // passport.authenticate('jwt', { session: false }),
-  addFriend
-);
+router.put('/add-friend', checkAuthentication, addFriend);
 
+router.get('/current', getLoggedInUser);
 export default router;

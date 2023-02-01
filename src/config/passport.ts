@@ -7,15 +7,19 @@ import {
   VerifyCallback,
 } from 'passport-google-oauth2';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { IGoogleProfile } from '../interfaces/user.interface';
+import { IGoogleProfile, IUser } from '../interfaces/user.interface';
 import * as UserService from '../services/user.service';
 
-passport.serializeUser((user, done) => {
-  done(null, user);
+passport.serializeUser((user: IUser, done) => {
+  done(null, user._id);
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser((userId: string, done) => {
+  UserService.findOrCreate({ uniqueKey: '_id', value: userId }).then(
+    (updatedUser) => {
+      done(null, updatedUser);
+    }
+  );
 });
 
 const googleStrat = new GoogleStrategy(

@@ -2,16 +2,20 @@ import { Types } from 'mongoose';
 import { Request } from 'express';
 
 export interface IUser {
-  readonly _id?: Types.ObjectId;
+  readonly _id?: string & Types.ObjectId;
   oauthId: string;
   authProvider: string;
   email: string;
   firstName: string;
   lastName: string;
   username?: string;
-  friends?: Array<Types.ObjectId> | Array<IUser>;
+  friends?: Array<string> & Array<Types.ObjectId> & Array<IUser>;
   createdAt?: string;
   updateAt?: string;
+}
+
+export interface IUserWithSocket extends IUser {
+  socketId: string;
 }
 
 export interface IGoogleProfile {
@@ -31,8 +35,8 @@ export interface IGoogleProfile {
 
 export interface ICreateUserParams {
   uniqueKey: string;
-  value: string;
-  userProfile: IGoogleProfile;
+  value: string | Types.ObjectId;
+  userProfile?: IGoogleProfile;
 }
 
 export interface RequestWithUserInfo extends Request {

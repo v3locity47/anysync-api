@@ -49,3 +49,15 @@ export const editProfile = async (
   );
   return updatedUser;
 };
+
+export const removeFriend = async (
+  userId: Types.ObjectId,
+  friendId: Types.ObjectId
+): Promise<IUser> => {
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { friends: friendId } },
+    { new: true }
+  ).lean();
+  return updatedUser;
+};

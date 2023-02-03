@@ -16,6 +16,7 @@ export const sendRoomInvite = (socket: SessionSocket, io: IOServer) =>
         fromUser: fromUser,
         toUserId: toUser._id,
       };
+      console.log(invitation);
       io.to(toUser.socketId).emit('room:invite', invitation);
     }
   });

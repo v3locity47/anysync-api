@@ -1,12 +1,7 @@
 import { Types } from 'mongoose';
 import { UserModel } from '../models/user.model';
-import {
-  ICreateUserParams,
-  IUser,
-  IUserWithSocket,
-} from '../interfaces/user.interface';
-import { RedisClient } from '../config/redis';
-import { isEmpty } from '../utils/general.util';
+import { ICreateUserParams, IUser } from '../interfaces/user.interface';
+import { generateUsername } from './username-generator.service';
 
 export const findOrCreate = async (
   params: ICreateUserParams
@@ -16,7 +11,9 @@ export const findOrCreate = async (
   if (user) {
     return user;
   }
+  const username = await generateUsername();
   const userData: IUser = {
+    username: username,
     firstName: userProfile.given_name,
     lastName: userProfile.family_name,
     email: userProfile.email,
@@ -53,42 +50,14 @@ export const editProfile = async (
   return updatedUser;
 };
 
-export const setOnlineStatus = async (userId: string, isOnline: boolean) => {
-  if (isOnline) {
-    await RedisClient.sadd('users:online', userId);
-  } else {
-    await RedisClient.srem('users:online', userId);
-  }
-};
-
-export const setUserHash = async (
-  userId: string,
-  userData: IUserWithSocket
-) => {
-  await RedisClient.hset(userId, userData);
-};
-
-export const removeUserHash = async (userId: string, field: string) => {
-  await RedisClient.hdel(userId, field);
-};
-
-export const getUserHash = async (userId: string) => {
-  const userHash = await RedisClient.hgetall(userId);
-  if (isEmpty(userHash)) {
-    return null;
-  }
-  return userHash;
-};
-
-export const checkOnlineUsers = async (userIds: Array<string>) => {
-  if (isEmpty(userIds)) {
-    return {};
-  }
-  const onlineUsers = await RedisClient.smismember('users:online', userIds);
-  const userStatusEntries = userIds.map((_, i) => [
-    userIds[i],
-    Boolean(onlineUsers[i]),
-  ]);
-  const userStatus = Object.fromEntries(userStatusEntries);
-  return userStatus;
+export const removeFriend = async (
+  userId: Types.ObjectId,
+  friendId: Types.ObjectId
+): Promise<IUser> => {
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { _id: userId },
+    { $pull: { friends: friendId } },
+    { new: true }
+  ).lean();
+  return updatedUser;
 };
